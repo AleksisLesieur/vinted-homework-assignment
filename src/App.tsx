@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import "./App.css";
+import Navbar from "./components/Navbar";
+import RenderPexelImages from "./components/RenderPexelImages";
+import { Photo } from "./components/RenderPexelImages";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [search, setSearch] = useState<string>("nature");
+  const [mediaType, setMediaType] = useState<string>("Images");
+  const [showingFavourites, setShowingFavourites] = useState<boolean>(false);
+  const [favourites, setFavourites] = useState<Photo[]>([]);
+
+  const toggleFavourites = () => {
+    setShowingFavourites((prev) => !prev);
+  };
+
+  const handleSaveFavourite = (photo: Photo) => {
+    setFavourites((prevFavourites) => {
+      const updatedFavourites = prevFavourites.some(
+        (fav) => fav.id === photo.id
+      )
+        ? prevFavourites.filter((fav) => fav.id !== photo.id)
+        : [...prevFavourites, photo];
+
+      localStorage.setItem("favourites", JSON.stringify(updatedFavourites));
+
+      return updatedFavourites;
+    });
+  };
+
+  useEffect(() => {
+    const storedFavourites = localStorage.getItem("favourites");
+    if (storedFavourites) {
+      setFavourites(JSON.parse(storedFavourites));
+    }
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <Navbar
+        setSearch={setSearch}
+        mediaType={mediaType}
+        setMediaType={setMediaType}
+        toggleFavourites={toggleFavourites}
+        favouriteCount={favourites.length}
+        showingFavourites={showingFavourites}
+        setShowingFavourites={setShowingFavourites}
+      />
+      {/* <RenderImages search={search} /> */}
+      <RenderPexelImages
+        search={search}
+        mediaType={mediaType}
+        showingFavourites={showingFavourites}
+        favourites={favourites}
+        handleSaveFavourite={handleSaveFavourite}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;

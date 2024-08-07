@@ -1,0 +1,66 @@
+nav {
+  display: flex;
+  //   justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  height: 150px;
+  box-shadow: 5px 5px 5px 5px grey;
+  //   padding: 40px 5%;
+  div {
+    padding: 10px;
+    font-size: 20px;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+  input[type="text"].textStyle {
+    margin: 10px 0;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .favouriteCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ff4081;
+    color: white;
+    font-size: 10px;
+    margin-left: 3px;
+    position: relative;
+    top: -8px;
+    right: -2px;
+    font-size: 10px;
+  }
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    height: auto;
+    padding: 20px 5%;
+    input[type="text"].textStyle {
+      margin: 0;
+      padding: 10px 50px 10px 10px;
+    }
+
+    div {
+      padding: 10px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    padding: 40px 5%;
+
+    div {
+      font-size: 22px;
+    }
+
+    input[type="text"].textStyle {
+      margin: 0 10px;
+    }
+  }
+}
