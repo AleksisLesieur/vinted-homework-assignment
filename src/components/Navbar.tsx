@@ -11,6 +11,7 @@ interface SearchData {
   setShowingFavourites: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+//testing
 export default function Navbar({
   setSearch,
   mediaType,
