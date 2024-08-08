@@ -6,6 +6,7 @@ import { FavouritesContextProvider } from "./components/FavouritesContextProvide
 import RenderPexelMedia from "./components/RenderPexelMedia";
 
 function App() {
+  // testing stuff
   return (
     <FavouritesContextProvider>
       <Navbar />
