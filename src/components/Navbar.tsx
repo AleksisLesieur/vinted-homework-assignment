@@ -1,34 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import styles from "./Navbar.module.scss";
+import { FavouritesContext } from "./FavouritesContextProvider";
 
-interface SearchData {
-  setSearch: React.Dispatch<React.SetStateAction<string>>;
-  mediaType: string;
-  setMediaType: React.Dispatch<React.SetStateAction<string>>;
-  favouriteCount: number;
-  toggleFavourites: () => void;
-  showingFavourites: boolean;
-  setShowingFavourites: React.Dispatch<React.SetStateAction<boolean>>;
-}
+// interface SearchData {
+//   setSearch: React.Dispatch<React.SetStateAction<string>>;
+// }
 
-//testing
-export default function Navbar({
-  setSearch,
-  mediaType,
-  setMediaType,
-  toggleFavourites,
-  favouriteCount,
-  showingFavourites,
-  setShowingFavourites,
-}: SearchData): JSX.Element {
+export default function Navbar(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [type, setType] = useState<boolean>(true);
-
-  function toggleType() {
-    setType((type) => !type);
-    setMediaType(() => (type ? "Videos" : "Images"));
-  }
+  const {
+    toggleFavourites,
+    favourites,
+    showingFavourites,
+    // setShowingFavourites,
+    setMedia,
+    setSearch,
+  } = useContext(FavouritesContext);
 
   useEffect(
     function () {
@@ -39,16 +27,13 @@ export default function Navbar({
 
   return (
     <nav>
-      <div
-        onClick={() => {
-          toggleType();
-          setShowingFavourites(false);
-        }}
-      >
-        {mediaType}
+      <div>
+        <span onClick={() => setMedia("Images")}>Images</span>
+        <span> / </span>
+        <span onClick={() => setMedia("Videos")}>Videos</span>
       </div>
       <input
-        placeholder={`Search for ${mediaType}...`}
+        placeholder={`Search for something...`}
         className={styles.textStyle}
         ref={inputRef}
         type="text"
@@ -56,12 +41,12 @@ export default function Navbar({
       />
       <div
         onClick={() => {
-          toggleFavourites();
+          toggleFavourites?.();
         }}
       >
         {showingFavourites ? "Go back" : "Favourites"}
-        {!!favouriteCount && (
-          <span className={styles.favouriteCount}>{favouriteCount}</span>
+        {!!favourites?.length && (
+          <span className={styles.favouriteCount}>{favourites.length}</span>
         )}
       </div>
     </nav>
