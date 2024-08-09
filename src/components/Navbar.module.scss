@@ -1,17 +1,32 @@
-nav {
+.nav {
   display: flex;
-  //   justify-content: space-between;
   flex-direction: column;
   align-items: center;
   height: 150px;
   box-shadow: 5px 5px 5px 5px grey;
-  //   padding: 40px 5%;
-  div {
+
+  .mediaToggle {
     padding: 10px;
     font-size: 20px;
     font-family: sans-serif;
     letter-spacing: 1px;
     cursor: pointer;
+
+    span {
+      cursor: pointer;
+      padding: 5px 10px;
+      transition: all 0.3s ease;
+
+      &.active {
+        font-weight: bold;
+        font-style: italic;
+        border-bottom: 2px solid #007bff;
+      }
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
+    }
   }
   input[type="text"].textStyle {
     margin: 10px 0;

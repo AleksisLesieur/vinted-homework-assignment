@@ -97,6 +97,8 @@ export default function RenderPexelImages(): JSX.Element {
               : [...prevVideos, ...data.videos[0].video_files]
           );
 
+          console.log(videos);
+
           setHasMore(data.page < Math.ceil(data.total_results / data.per_page));
         } catch (err) {
           console.error(err);
@@ -123,8 +125,8 @@ export default function RenderPexelImages(): JSX.Element {
       {videos.map(function (element, index) {
         console.log(element);
         return (
-          <div key={index}>
-            <video controls width="50%" height="50%">
+          <div key={index} className={styles.videos}>
+            <video controls width="90%" height="90%">
               <source src={element.link} type={element.file_type} />
               Your browser does not support the video tag.
             </video>

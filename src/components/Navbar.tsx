@@ -13,6 +13,7 @@ export default function Navbar(): JSX.Element {
     toggleFavourites,
     favourites,
     showingFavourites,
+    media,
     // setShowingFavourites,
     setMedia,
     setSearch,
@@ -26,14 +27,24 @@ export default function Navbar(): JSX.Element {
   );
 
   return (
-    <nav>
-      <div>
-        <span onClick={() => setMedia("Images")}>Images</span>
+    <nav className={styles.nav}>
+      <div className={styles.mediaToggle}>
+        <span
+          className={media === "Images" ? styles.active : ""}
+          onClick={() => setMedia("Images")}
+        >
+          Images
+        </span>
         <span> / </span>
-        <span onClick={() => setMedia("Videos")}>Videos</span>
+        <span
+          className={media === "Videos" ? styles.active : ""}
+          onClick={() => setMedia("Videos")}
+        >
+          Videos
+        </span>
       </div>
       <input
-        placeholder={`Search for something...`}
+        placeholder={`Search for ${media}...`}
         className={styles.textStyle}
         ref={inputRef}
         type="text"
