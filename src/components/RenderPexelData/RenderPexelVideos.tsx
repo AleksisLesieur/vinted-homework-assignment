@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import styles from "./RenderPexelVideos.module.scss";
-import Loading from "./../../assets/Loading.svg";
 import { FavouritesContext } from "../FavouritesContextProvider";
+import Loading from "./../../assets/Loading.svg";
 
 interface PexelsVideoSearchResponse {
   next_page: string;
@@ -12,7 +12,7 @@ interface PexelsVideoSearchResponse {
   videos: Video[];
 }
 
-interface Video {
+export interface Video {
   avg_color: null;
   duration: number;
   full_res: null;
@@ -50,9 +50,9 @@ interface VideoPicture {
   picture: string;
 }
 
-const DEFAULT_QUALITY = "1080p";
+const Default = "1080p";
 
-const QUALITY_HEIGHT_MAP: { [key: string]: number } = {
+const QualitySettings: { [key: string]: number } = {
   "240p": 240,
   "360p": 360,
   "480p": 480,
@@ -67,7 +67,7 @@ function filterVideosByClosestQuality(
   desiredQuality: string
 ): Video[] {
   const targetHeight =
-    QUALITY_HEIGHT_MAP[desiredQuality] || QUALITY_HEIGHT_MAP[DEFAULT_QUALITY];
+    QualitySettings[desiredQuality] || QualitySettings[Default];
 
   return videos.map((video) => {
     const closestFile = video.video_files.reduce((closest, current) => {
@@ -90,14 +90,16 @@ function filterVideosByClosestQuality(
 export default function RenderPexelImages(): JSX.Element {
   const [page, setPage] = useState<number>(1);
   const [showVideos, setShowVideos] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [videos, setVideos] = useState<Video[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   const controller = useRef(new AbortController());
   const observer = useRef<IntersectionObserver | null>(null);
-  const lastVideoRef = useRef<HTMLImageElement | null>(null);
+  const lastVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  const { media, search, quality } = useContext(FavouritesContext);
+  const { media, search, quality, showingFavourite } =
+    useContext(FavouritesContext);
 
   useEffect(() => {
     setPage(1);
@@ -105,7 +107,8 @@ export default function RenderPexelImages(): JSX.Element {
   }, [search]);
 
   useEffect(() => {
-    async function getPictures() {
+    async function getVideos() {
+      setLoading(true);
       try {
         controller.current.abort("Abort");
 
@@ -135,16 +138,59 @@ export default function RenderPexelImages(): JSX.Element {
         setHasMore(data.page < Math.ceil(data.total_results / data.per_page));
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     }
-    getPictures();
+    getVideos();
   }, [page, search, controller, quality]);
+
+  useEffect(() => {
+    setShowVideos(false);
+    console.log;
+    const timer = setTimeout(() => {
+      setShowVideos(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(
+    function () {
+      if (loading) return;
+
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+
+      if (lastVideoRef.current) {
+        observer.current.observe(lastVideoRef.current);
+      }
+
+      return () => {
+        if (observer.current) {
+          observer.current.disconnect();
+        }
+      };
+    },
+    [loading, hasMore, videos, showingFavourite]
+  );
 
   return (
     <div className={styles.videosContainer}>
-      {videos.map((video) => (
-        <div key={video.id} className={styles.videoContainer}>
-          <video controls width="90%" height="90%">
+      {videos.map((video, index) => (
+        <div key={index} className={styles.videoContainer}>
+          <video
+            ref={index === videos.length - 1 ? lastVideoRef : null}
+            controls
+            width="100%"
+            height="100%"
+          >
             <source
               src={video.video_files[0].link}
               type={video.video_files[0].file_type}

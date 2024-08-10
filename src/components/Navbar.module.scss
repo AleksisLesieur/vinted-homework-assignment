@@ -5,6 +5,10 @@
   height: 150px;
   box-shadow: 5px 5px 5px 5px grey;
 
+  div {
+    font-size: 22px;
+  }
+
   .mediaToggle {
     padding: 10px;
     font-size: 20px;
@@ -56,7 +60,7 @@
     margin-left: 3px;
     position: relative;
     top: -8px;
-    right: -2px;
+    right: 5px;
     font-size: 10px;
   }
 
@@ -140,4 +144,18 @@
   .qualitySelect {
     padding: 5px 20px 5px 5px;
   }
+}
+
+.testing {
+  position: fixed;
+  right: 2%;
+  bottom: 2%;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.testing.visible {
+  opacity: 1;
+  cursor: pointer;
 }

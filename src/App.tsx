@@ -13,7 +13,6 @@ function App() {
     <FavouritesContextProvider>
       <Navbar />
       <RenderPexelMedia />
-
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </FavouritesContextProvider>
   );

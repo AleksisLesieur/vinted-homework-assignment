@@ -3,17 +3,6 @@ import styles from "./RenderPexelImages.module.scss";
 import Loading from "./../../assets/Loading.svg";
 import { FavouritesContext } from "../FavouritesContextProvider";
 
-interface Source {
-  landscape: string;
-  large: string;
-  large2x: string;
-  medium: string;
-  original: string;
-  portrait: string;
-  small: string;
-  tiny: string;
-}
-
 export interface Photo {
   id: number;
   width: number;
@@ -58,9 +47,9 @@ export default function RenderPexelImages(): JSX.Element {
   const lastImageRef = useRef<HTMLImageElement | null>(null);
 
   const {
-    showingFavourites,
-    favourites,
-    handleSaveFavourite,
+    showingFavourite,
+    favouriteImages,
+    handleSaveFavouriteImages,
     media,
     search,
     quality,
@@ -79,7 +68,7 @@ export default function RenderPexelImages(): JSX.Element {
       case "2160p":
         return element.src.original;
       default:
-        return element.src.large; // Default to large if quality is not recognized
+        return element.src.large;
     }
   };
 
@@ -92,7 +81,6 @@ export default function RenderPexelImages(): JSX.Element {
     function () {
       async function getPictures() {
         setLoading(true);
-        // setIsLoadingMore(true);
         try {
           controller.current.abort("Abort");
 
@@ -129,7 +117,6 @@ export default function RenderPexelImages(): JSX.Element {
           console.error(err);
         } finally {
           setLoading(false);
-          // setIsLoadingMore(false);
         }
       }
       getPictures();
@@ -156,9 +143,6 @@ export default function RenderPexelImages(): JSX.Element {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
           setPage((prevPage) => prevPage + 1);
-          console.log(hasMore);
-          console.log(media);
-          console.log(quality);
         }
       });
 
@@ -172,7 +156,7 @@ export default function RenderPexelImages(): JSX.Element {
         }
       };
     },
-    [loading, hasMore, images, showingFavourites, showImages]
+    [loading, hasMore, images, showingFavourite, showImages]
   );
 
   function getTenWords(inputString: string): string {
@@ -180,27 +164,23 @@ export default function RenderPexelImages(): JSX.Element {
     return words.slice(0, 10).join(" ");
   }
 
-  window.addEventListener("scroll", function () {
-    console.log(window.scrollY);
-  });
-
   const handleImageLoad = (id: number) => {
     setLoadedImages((prev) => new Set(prev).add(id));
   };
-
-  // ... (keep the existing useEffects)
 
   useEffect(() => {
     setLoadedImages(new Set());
   }, [quality]);
 
-  const imagesToRender = showingFavourites ? favourites : images;
+  const imagesToRender = showingFavourite ? favouriteImages : images;
 
   return (
     <div className={styles["images-grid"]}>
       {showImages &&
         imagesToRender?.map((element, index) => {
-          const isFavourite = favourites?.some((fav) => fav.id === element.id);
+          const isFavourite = favouriteImages?.some(
+            (fav) => fav.id === element.id
+          );
           const isLoaded = loadedImages.has(element.id);
           return (
             <div
@@ -240,7 +220,7 @@ export default function RenderPexelImages(): JSX.Element {
               </div>
               <div
                 className={styles.favourite}
-                onClick={() => handleSaveFavourite?.(element)}
+                onClick={() => handleSaveFavouriteImages?.(element)}
               >
                 {isFavourite ? "Remove" : "Favourite"}
               </div>
@@ -248,7 +228,7 @@ export default function RenderPexelImages(): JSX.Element {
           );
         })}
 
-      {showingFavourites && favourites?.length === 0 && (
+      {showingFavourite && favouriteImages?.length === 0 && (
         <div className={styles.edgecase}>No favourites saved yet</div>
       )}
 
@@ -264,18 +244,18 @@ export default function RenderPexelImages(): JSX.Element {
         </div>
       )}
 
-      {!images && !search && !showingFavourites && (
+      {!images && !search && !showingFavourite && (
         <div className={styles.edgecase}>
           Search for any pictures you would like to see!
         </div>
       )}
 
-      {!hasMore && !!images?.length && !showingFavourites && (
+      {!hasMore && !!images?.length && !showingFavourite && (
         <div className={styles.edgecase}>
           That's all folks! No more images for "{search}"
         </div>
       )}
-      {!hasMore && !images?.length && !showingFavourites && !!search.length && (
+      {!hasMore && !images?.length && !showingFavourite && !!search.length && (
         <div className={styles.edgecase}>No images found for "{search}"</div>
       )}
     </div>
