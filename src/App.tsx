@@ -11,12 +11,9 @@ function App() {
 
   return (
     <FavouritesContextProvider>
-      {!isModalOpen && (
-        <>
-          <Navbar />
-          <RenderPexelMedia />
-        </>
-      )}
+      <Navbar />
+      <RenderPexelMedia />
+
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </FavouritesContextProvider>
   );

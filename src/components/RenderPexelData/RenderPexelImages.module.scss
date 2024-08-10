@@ -5,14 +5,18 @@
   margin: 0;
   // overflow: hidden;
 
-  &.blur-load {
-    background-size: cover;
-    background-position: center;
-    // cursor: pointer;
-  }
+  background-size: cover;
+  background-position: center;
+
+  // &.blur-load {
+  //   background-size: cover;
+  //   background-position: center;
+  //   // cursor: pointer;
+  // }
 
   &:hover::after,
-  &:focus::after {
+  &:focus::after,
+  .loading-overlay {
     content: "";
     position: absolute;
     top: 0;
@@ -20,9 +24,24 @@
     right: 0;
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.2);
+    z-index: 2;
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
   }
 
   img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.1s ease;
+    box-shadow: 1px 1px 2px 1px rgba(30, 30, 30, 0.52);
+  }
+
+  .pexelIMG {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -33,6 +52,7 @@
   &:focus img {
     filter: brightness(65%);
   }
+
   .image-description {
     text-align: center;
     margin-top: 0px;
@@ -154,8 +174,4 @@
       background-color: white;
     }
   }
-
-  // .image-container {
-  //   height: 350px;
-  // }
 }

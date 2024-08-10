@@ -51,6 +51,7 @@ export default function RenderPexelImages(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [showImages, setShowImages] = useState<boolean>(true);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   const controller = useRef(new AbortController());
   const observer = useRef<IntersectionObserver | null>(null);
@@ -179,6 +180,20 @@ export default function RenderPexelImages(): JSX.Element {
     return words.slice(0, 10).join(" ");
   }
 
+  window.addEventListener("scroll", function () {
+    console.log(window.scrollY);
+  });
+
+  const handleImageLoad = (id: number) => {
+    setLoadedImages((prev) => new Set(prev).add(id));
+  };
+
+  // ... (keep the existing useEffects)
+
+  useEffect(() => {
+    setLoadedImages(new Set());
+  }, [quality]);
+
   const imagesToRender = showingFavourites ? favourites : images;
 
   return (
@@ -186,21 +201,34 @@ export default function RenderPexelImages(): JSX.Element {
       {showImages &&
         imagesToRender?.map((element, index) => {
           const isFavourite = favourites?.some((fav) => fav.id === element.id);
-          // saveFavouriteImage(element);
+          const isLoaded = loadedImages.has(element.id);
           return (
             <div
               key={index}
-              className={`${styles["image-container"]} `}
-              // style={{
-              //   backgroundImage: `url(${element.src.tiny})`,
-              //   boxShadow: "5px 5px 10px 8px rgba(30, 30, 30, 0.52)",
-              // }}
+              className={`${styles["image-container"]} ${
+                isLoaded ? styles["loaded"] : ""
+              }`}
+              style={{
+                backgroundImage: `url(${element.src.tiny})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
             >
+              {!isLoaded && (
+                <div className={styles["loading-overlay"]}>
+                  <img
+                    src={Loading}
+                    alt="Loading..."
+                    className={styles["loading-spinner"]}
+                  />
+                </div>
+              )}
               <img
+                className={styles.pexelIMG}
                 ref={index === images.length - 1 ? lastImageRef : null}
-                key={index}
                 src={renderImageQuality(element, quality)}
                 alt={element.alt}
+                onLoad={() => handleImageLoad(element.id)}
               />
               <div className={styles["image-description"]}>
                 <div className={styles["image-title"]}>

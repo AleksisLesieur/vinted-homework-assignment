@@ -19,7 +19,7 @@ export default function Navbar(): JSX.Element {
     setQuality,
   } = useContext(FavouritesContext);
 
-  const handleQualityChange = (event) => {
+  const handleQualityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setQuality(event.target.value);
   };
 
