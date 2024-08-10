@@ -106,6 +106,7 @@ export default function RenderPexelImages(): JSX.Element {
           }
 
           const data: PhotosResponse = await response.json();
+
           setImages((prevImages) =>
             page === 1 ? data.photos : [...prevImages, ...data.photos]
           );

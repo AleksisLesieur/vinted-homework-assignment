@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import styles from "./RenderPexelVideos.module.scss";
 import { FavouritesContext } from "../FavouritesContextProvider";
 import Loading from "./../../assets/Loading.svg";
@@ -71,14 +71,14 @@ function filterVideosByClosestQuality(
 
   return videos.map((video) => {
     const closestFile = video.video_files.reduce((closest, current) => {
-      if (!closest) return current;
+      if (!closest.height) return current;
       if (!current.height) return closest;
 
-      const closestDiff = Math.abs((closest.height || 0) - targetHeight);
+      const closestDiff = Math.abs(closest.height - targetHeight);
       const currentDiff = Math.abs(current.height - targetHeight);
 
       return currentDiff < closestDiff ? current : closest;
-    });
+    }, video.video_files[0]);
 
     return {
       ...video,
@@ -87,7 +87,7 @@ function filterVideosByClosestQuality(
   });
 }
 
-export default function RenderPexelImages(): JSX.Element {
+export default function RenderPexelVideos(): JSX.Element {
   const [page, setPage] = useState<number>(1);
   const [showVideos, setShowVideos] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
@@ -108,15 +108,17 @@ export default function RenderPexelImages(): JSX.Element {
 
   useEffect(() => {
     async function getVideos() {
+      if (!hasMore || loading) return;
+
       setLoading(true);
       try {
-        controller.current.abort("Abort");
+        controller.current.abort();
+        controller.current = new AbortController();
 
         const url = `https://api.pexels.com/videos/search?query=${search}&per_page=5&page=${page}`;
-
         const token =
           "FrWFCn9uBS7HA8RtewIBfrdQCl6qofLBF7WPwRiSSLUqL1cCLee1uIsj";
-        controller.current = new AbortController();
+
         const response = await fetch(url, {
           signal: controller.current.signal,
           headers: {
@@ -131,28 +133,26 @@ export default function RenderPexelImages(): JSX.Element {
           quality
         );
 
-        setVideos((prevVideos) =>
-          page === 1 ? filteredVideos : [...prevVideos, ...filteredVideos]
-        );
-
+        setVideos((prevVideos) => [...prevVideos, ...filteredVideos]);
         setHasMore(data.page < Math.ceil(data.total_results / data.per_page));
       } catch (err) {
-        console.error(err);
+        if (err.name !== "AbortError") {
+          console.error(err);
+        }
       } finally {
         setLoading(false);
       }
     }
     getVideos();
-  }, [page, search, controller, quality]);
+  }, [page, search, controller]);
 
-  useEffect(() => {
-    setShowVideos(false);
-    console.log;
-    const timer = setTimeout(() => {
-      setShowVideos(true);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [search]);
+  // useEffect(() => {
+  //   setShowVideos(false);
+  //   const timer = setTimeout(() => {
+  //     setShowVideos(true);
+  //   }, 1000);
+  //   return () => clearTimeout(timer);
+  // }, [search]);
 
   useEffect(
     function () {
@@ -178,7 +178,7 @@ export default function RenderPexelImages(): JSX.Element {
         }
       };
     },
-    [loading, hasMore, videos, showingFavourite]
+    [loading, hasMore, videos, showingFavourite, showVideos]
   );
 
   return (
@@ -199,6 +199,9 @@ export default function RenderPexelImages(): JSX.Element {
           </video>
         </div>
       ))}
+      {/* {loading && (
+        <img src={Loading} alt="Loading" className={styles.loading} />
+      )} */}
     </div>
   );
 }
