@@ -3,7 +3,7 @@
   width: 280px;
   height: 280px;
   margin: 0;
-  overflow: hidden;
+  // overflow: hidden;
 
   &.blur-load {
     background-size: cover;
@@ -27,6 +27,7 @@
     height: 100%;
     object-fit: cover;
     transition: filter 0.1s ease;
+    box-shadow: 5px 5px 10px 8px rgba(30, 30, 30, 0.52);
   }
   &:hover img,
   &:focus img {

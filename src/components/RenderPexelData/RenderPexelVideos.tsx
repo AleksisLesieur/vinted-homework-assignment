@@ -50,89 +50,109 @@ interface VideoPicture {
   picture: string;
 }
 
+const DEFAULT_QUALITY = "1080p";
+
+const QUALITY_HEIGHT_MAP: { [key: string]: number } = {
+  "240p": 240,
+  "360p": 360,
+  "480p": 480,
+  "720p": 720,
+  "1080p": 1080,
+  "1440p": 1440,
+  "2160p": 2160,
+};
+
+function filterVideosByClosestQuality(
+  videos: Video[],
+  desiredQuality: string
+): Video[] {
+  const targetHeight =
+    QUALITY_HEIGHT_MAP[desiredQuality] || QUALITY_HEIGHT_MAP[DEFAULT_QUALITY];
+
+  return videos.map((video) => {
+    const closestFile = video.video_files.reduce((closest, current) => {
+      if (!closest) return current;
+      if (!current.height) return closest;
+
+      const closestDiff = Math.abs((closest.height || 0) - targetHeight);
+      const currentDiff = Math.abs(current.height - targetHeight);
+
+      return currentDiff < closestDiff ? current : closest;
+    });
+
+    return {
+      ...video,
+      video_files: [closestFile],
+    };
+  });
+}
+
 export default function RenderPexelImages(): JSX.Element {
   const [page, setPage] = useState<number>(1);
   const [showVideos, setShowVideos] = useState<boolean>(true);
-  const [videos, setVideos] = useState<VideoFile[]>([]);
+  const [videos, setVideos] = useState<Video[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   const controller = useRef(new AbortController());
   const observer = useRef<IntersectionObserver | null>(null);
   const lastVideoRef = useRef<HTMLImageElement | null>(null);
 
-  const { media, search } = useContext(FavouritesContext);
+  const { media, search, quality } = useContext(FavouritesContext);
 
   useEffect(() => {
     setPage(1);
     setHasMore(true);
   }, [search]);
 
-  useEffect(
-    function () {
-      async function getPictures() {
-        // setIsLoadingMore(true);
-        try {
-          controller.current.abort("Abort");
+  useEffect(() => {
+    async function getPictures() {
+      try {
+        controller.current.abort("Abort");
 
-          const url = `https://api.pexels.com/videos/search?query=${search}&per_page=${page}`;
+        const url = `https://api.pexels.com/videos/search?query=${search}&per_page=5&page=${page}`;
 
-          const token =
-            "FrWFCn9uBS7HA8RtewIBfrdQCl6qofLBF7WPwRiSSLUqL1cCLee1uIsj";
-          controller.current = new AbortController();
-          const response = await fetch(url, {
-            signal: controller.current.signal,
-            headers: {
-              Authorization: token,
-            },
-          });
+        const token =
+          "FrWFCn9uBS7HA8RtewIBfrdQCl6qofLBF7WPwRiSSLUqL1cCLee1uIsj";
+        controller.current = new AbortController();
+        const response = await fetch(url, {
+          signal: controller.current.signal,
+          headers: {
+            Authorization: token,
+          },
+        });
 
-          //   if (search?.length === 0) {
-          //     setLoading(false);
-          //   }
+        const data: PexelsVideoSearchResponse = await response.json();
 
-          const data: PexelsVideoSearchResponse = await response.json();
-          setVideos((prevVideos) =>
-            page === 1
-              ? data.videos[0].video_files
-              : [...prevVideos, ...data.videos[0].video_files]
-          );
+        const filteredVideos = filterVideosByClosestQuality(
+          data.videos,
+          quality
+        );
 
-          console.log(videos);
+        setVideos((prevVideos) =>
+          page === 1 ? filteredVideos : [...prevVideos, ...filteredVideos]
+        );
 
-          setHasMore(data.page < Math.ceil(data.total_results / data.per_page));
-        } catch (err) {
-          console.error(err);
-        } finally {
-          //   setLoading(false);
-          // setIsLoadingMore(false);
-        }
+        setHasMore(data.page < Math.ceil(data.total_results / data.per_page));
+      } catch (err) {
+        console.error(err);
       }
-      getPictures();
-    },
-    [page, search, controller]
-  );
-
-  //   useEffect(() => {
-  //     setShowImages(false);
-  //     const timer = setTimeout(() => {
-  //       setShowImages(true);
-  //     }, 300);
-  //     return () => clearTimeout(timer);
-  //   }, [search]);
+    }
+    getPictures();
+  }, [page, search, controller, quality]);
 
   return (
-    <div>
-      {videos.map(function (element, index) {
-        console.log(element);
-        return (
-          <div key={index} className={styles.videos}>
-            <video controls width="90%" height="90%">
-              <source src={element.link} type={element.file_type} />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        );
-      })}
+    <div className={styles.videosContainer}>
+      {videos.map((video) => (
+        <div key={video.id} className={styles.videoContainer}>
+          <video controls width="90%" height="90%">
+            <source
+              src={video.video_files[0].link}
+              type={video.video_files[0].file_type}
+            />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      ))}
     </div>
   );
 }

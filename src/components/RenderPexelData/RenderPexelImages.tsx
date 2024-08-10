@@ -56,8 +56,31 @@ export default function RenderPexelImages(): JSX.Element {
   const observer = useRef<IntersectionObserver | null>(null);
   const lastImageRef = useRef<HTMLImageElement | null>(null);
 
-  const { showingFavourites, favourites, handleSaveFavourite, media, search } =
-    useContext(FavouritesContext);
+  const {
+    showingFavourites,
+    favourites,
+    handleSaveFavourite,
+    media,
+    search,
+    quality,
+  } = useContext(FavouritesContext);
+
+  const renderImageQuality = (element: Photo, quality: string): string => {
+    switch (quality) {
+      case "240p":
+        return element.src.small;
+      case "480p":
+        return element.src.medium;
+      case "720p":
+        return element.src.large;
+      case "1080p":
+        return element.src.large2x;
+      case "2160p":
+        return element.src.original;
+      default:
+        return element.src.large; // Default to large if quality is not recognized
+    }
+  };
 
   useEffect(() => {
     setPage(1);
@@ -133,6 +156,8 @@ export default function RenderPexelImages(): JSX.Element {
         if (entries[0].isIntersecting && hasMore) {
           setPage((prevPage) => prevPage + 1);
           console.log(hasMore);
+          console.log(media);
+          console.log(quality);
         }
       });
 
@@ -165,16 +190,16 @@ export default function RenderPexelImages(): JSX.Element {
           return (
             <div
               key={index}
-              className={`${styles["image-container"]} ${styles["blur-load"]}`}
-              style={{
-                backgroundImage: `url(${element.src.tiny})`,
-                boxShadow: "5px 5px 10px 8px rgba(30, 30, 30, 0.52)",
-              }}
+              className={`${styles["image-container"]} `}
+              // style={{
+              //   backgroundImage: `url(${element.src.tiny})`,
+              //   boxShadow: "5px 5px 10px 8px rgba(30, 30, 30, 0.52)",
+              // }}
             >
               <img
                 ref={index === images.length - 1 ? lastImageRef : null}
                 key={index}
-                src={element.src.large2x}
+                src={renderImageQuality(element, quality)}
                 alt={element.alt}
               />
               <div className={styles["image-description"]}>

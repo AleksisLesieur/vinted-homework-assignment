@@ -11,6 +11,8 @@ interface FavouritesContextType {
   setMedia: React.Dispatch<React.SetStateAction<string>>;
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
+  quality: string;
+  setQuality: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface FavouritesContextProviderProps {
@@ -27,6 +29,8 @@ export const FavouritesContext = React.createContext<FavouritesContextType>({
   setMedia: () => {},
   search: "nature",
   setSearch: () => {},
+  quality: "240p",
+  setQuality: () => {},
 });
 
 export const FavouritesContextProvider = ({
@@ -36,6 +40,7 @@ export const FavouritesContextProvider = ({
   const [favourites, setFavourites] = useState<Photo[]>([]);
   const [media, setMedia] = useState<string>("Images");
   const [search, setSearch] = useState<string>("nature");
+  const [quality, setQuality] = useState<string>("240p");
 
   const toggleFavourites = () => {
     setShowingFavourites((prev) => !prev);
@@ -74,6 +79,8 @@ export const FavouritesContextProvider = ({
         setMedia,
         search,
         setSearch,
+        quality,
+        setQuality,
       }}
     >
       {children}

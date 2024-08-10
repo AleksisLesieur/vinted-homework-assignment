@@ -28,12 +28,20 @@
       }
     }
   }
+
   input[type="text"].textStyle {
     margin: 10px 0;
     padding: 10px 20px;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
+
+  // .rightSide {
+  //   display: flex;
+  //   font-size: 20px;
+  //   font-family: sans-serif;
+  //   letter-spacing: 1px;
+  // }
 
   .favouriteCount {
     display: inline-flex;
@@ -61,21 +69,75 @@
       margin: 0;
       padding: 10px 50px 10px 10px;
     }
-
-    div {
-      padding: 10px;
-    }
   }
 
   @media (min-width: 1024px) {
     padding: 40px 5%;
 
-    div {
-      font-size: 22px;
-    }
-
     input[type="text"].textStyle {
       margin: 0 10px;
     }
+  }
+}
+
+.rightSide {
+  display: flex;
+  align-items: center;
+  gap: 10px; // Adjust this value to control spacing between elements
+}
+
+.selectWrapper {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+}
+
+.qualitySelect {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 20px 0 5px; // Reduced padding to bring text higher
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: #666;
+  }
+
+  &:focus {
+    color: #000;
+  }
+}
+
+.selectWrapper::after {
+  content: "\25BC";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Styling for different browsers */
+.qualitySelect::-ms-expand {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .rightSide {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .qualitySelect {
+    padding: 5px 20px 5px 5px;
   }
 }
