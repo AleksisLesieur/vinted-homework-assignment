@@ -102,9 +102,24 @@ export default function RenderPexelVideos(): JSX.Element {
     useContext(FavouritesContext);
 
   useEffect(() => {
+    setVideos([]);
     setPage(1);
     setHasMore(true);
-  }, [search]);
+  }, [search, quality]);
+
+  useEffect(() => {
+    console.log("--------------------");
+    console.log(page, " page");
+    console.log(videos, " videos");
+    console.log(loading, " loading");
+    console.log(hasMore, " hasMore");
+    console.log(showVideos, " showVideos");
+    console.log(quality, " quality");
+    console.log(controller, " controller");
+    console.log(observer, " observer");
+    console.log(lastVideoRef, " lastVideoref");
+    console.log("--------------------");
+  }, [loading, hasMore, videos, showingFavourite, showVideos, quality]);
 
   useEffect(() => {
     async function getVideos() {
@@ -144,19 +159,11 @@ export default function RenderPexelVideos(): JSX.Element {
       }
     }
     getVideos();
-  }, [page, search, controller]);
-
-  // useEffect(() => {
-  //   setShowVideos(false);
-  //   const timer = setTimeout(() => {
-  //     setShowVideos(true);
-  //   }, 1000);
-  //   return () => clearTimeout(timer);
-  // }, [search]);
+  }, [page, search, controller, quality]);
 
   useEffect(
     function () {
-      if (loading) return;
+      // if (loading) return;
 
       if (observer.current) {
         observer.current.disconnect();
@@ -178,7 +185,7 @@ export default function RenderPexelVideos(): JSX.Element {
         }
       };
     },
-    [loading, hasMore, videos, showingFavourite, showVideos]
+    [loading, hasMore, videos, showingFavourite, showVideos, quality]
   );
 
   return (
