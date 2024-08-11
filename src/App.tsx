@@ -1,7 +1,5 @@
 import { useState } from "react";
-import "./App.css";
 import Navbar from "./components/Navbar";
-// import RenderPexelImages from "./components/RenderPexelData/RenderPexelImages";
 import { FavouritesContextProvider } from "./components/FavouritesContextProvider";
 import RenderPexelMedia from "./components/RenderPexelMedia";
 import Modal from "./components/ImprovingUI/Modal";

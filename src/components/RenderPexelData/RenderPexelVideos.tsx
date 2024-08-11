@@ -92,7 +92,6 @@ function filterVideosByClosestQuality(
 
 export default function RenderPexelVideos(): JSX.Element {
   const [page, setPage] = useState<number>(1);
-  const [showVideos, setShowVideos] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [videos, setVideos] = useState<Video[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -102,29 +101,12 @@ export default function RenderPexelVideos(): JSX.Element {
   const lastVideoRef = useRef<HTMLVideoElement | null>(null);
 
   const {
-    media,
     search,
     quality,
     showingFavourite,
     favouriteVideos,
-    toggleFavourites,
     handleSaveFavouriteVideos,
   } = useContext(FavouritesContext);
-
-  useEffect(() => {
-    console.log("--------------------");
-    console.log(page, " page");
-    console.log(videos, " videos");
-    console.log(loading, " loading");
-    console.log(hasMore, " hasMore");
-    console.log(showVideos, " showVideos");
-    console.log(quality, " quality");
-    console.log(controller, " controller");
-    console.log(observer, " observer");
-    console.log(lastVideoRef, " lastVideoref");
-    console.log(search, " search");
-    console.log("--------------------");
-  }, [loading, hasMore, videos, showingFavourite, showVideos, quality]);
 
   useEffect(() => {
     async function getVideos() {
@@ -156,9 +138,7 @@ export default function RenderPexelVideos(): JSX.Element {
         setVideos((prevVideos) => [...prevVideos, ...filteredVideos]);
         setHasMore(data.page < Math.ceil(data.total_results / data.per_page));
       } catch (err) {
-        if (err.name !== "AbortError") {
-          console.error(err);
-        }
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -168,8 +148,6 @@ export default function RenderPexelVideos(): JSX.Element {
 
   useEffect(
     function () {
-      // if (loading) return;
-
       if (observer.current) {
         observer.current.disconnect();
       }
@@ -190,7 +168,7 @@ export default function RenderPexelVideos(): JSX.Element {
         }
       };
     },
-    [loading, hasMore, videos, showingFavourite, showVideos, quality]
+    [loading, hasMore, videos, showingFavourite, quality]
   );
 
   useEffect(() => {

@@ -3,11 +3,6 @@ import styles from "./Navbar.module.scss";
 import { FavouritesContext } from "./FavouritesContextProvider";
 import UpArrow from "./../assets/UpArrow.svg";
 
-// const qualities = ["240p", "360p", "480p", "720p", "1080p", "1440p", "2160p"];
-
-const DEFAULT_THRESHOLD = 0.1;
-const DEFAULT_ROOT_MARGIN = "0px";
-
 export default function Navbar(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -21,7 +16,6 @@ export default function Navbar(): JSX.Element {
     favouriteVideos,
     showingFavourite,
     media,
-    // setShowingFavourites,
     setMedia,
     setSearch,
     quality,
@@ -43,31 +37,22 @@ export default function Navbar(): JSX.Element {
       });
     };
     const options: IntersectionObserverInit = {
-      threshold: DEFAULT_THRESHOLD,
-      rootMargin: DEFAULT_ROOT_MARGIN,
+      threshold: 0.1,
+      rootMargin: "0px",
     };
 
     const observer = new IntersectionObserver(handleIntersection, options);
 
     if (navRef.current) {
-      console.log("Starting to observe the nav element");
       observer.observe(navRef.current);
     }
 
     return () => {
       if (navRef.current) {
-        console.log("Cleaning up: stopping observation of the nav element");
         observer.unobserve(navRef.current);
       }
     };
   }, []);
-
-  // useEffect(
-  //   function () {
-  //     inputRef.current?.focus();
-  //   },
-  //   [inputRef]
-  // );
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -77,7 +62,7 @@ export default function Navbar(): JSX.Element {
   };
 
   return (
-    <nav className={styles.nav} ref={navRef}>
+    <nav ref={navRef}>
       <div className={styles.mediaToggle}>
         <span
           className={media === "Images" ? styles.active : ""}

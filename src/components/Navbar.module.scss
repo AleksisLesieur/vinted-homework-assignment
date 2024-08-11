@@ -1,4 +1,4 @@
-.nav {
+nav {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,28 +40,50 @@
     border-radius: 4px;
   }
 
-  // .rightSide {
-  //   display: flex;
-  //   font-size: 20px;
-  //   font-family: sans-serif;
-  //   letter-spacing: 1px;
-  // }
-
-  .favouriteCount {
-    display: inline-flex;
+  .rightSide {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: #ff4081;
-    color: white;
-    font-size: 10px;
-    margin-left: 3px;
-    position: relative;
-    top: -8px;
-    right: 5px;
-    font-size: 10px;
+    gap: 10px;
+    .selectWrapper {
+      position: relative;
+      display: inline-block;
+      margin: 0;
+      .qualitySelect {
+        appearance: none;
+        background-color: transparent;
+        border: none;
+        padding: 0 20px 0 5px;
+        font-size: 16px;
+        color: #333;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: #666;
+        }
+
+        &:focus {
+          color: #000;
+        }
+      }
+    }
+    .favouriteCount {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #ff4081;
+      color: white;
+      font-size: 10px;
+      margin-left: 3px;
+      position: relative;
+      top: -8px;
+      right: 5px;
+      font-size: 10px;
+    }
   }
 
   @media (min-width: 768px) {
@@ -81,40 +103,6 @@
     input[type="text"].textStyle {
       margin: 0 10px;
     }
-  }
-}
-
-.rightSide {
-  display: flex;
-  align-items: center;
-  gap: 10px; // Adjust this value to control spacing between elements
-}
-
-.selectWrapper {
-  position: relative;
-  display: inline-block;
-  margin: 0;
-}
-
-.qualitySelect {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: transparent;
-  border: none;
-  padding: 0 20px 0 5px; // Reduced padding to bring text higher
-  font-size: 16px;
-  color: #333;
-  cursor: pointer;
-  outline: none;
-  transition: all 0.3s ease;
-
-  &:hover {
-    color: #666;
-  }
-
-  &:focus {
-    color: #000;
   }
 }
 

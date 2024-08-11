@@ -1,18 +1,18 @@
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  padding: 20px;
+  place-items: center;
+}
+
 .image-container {
   position: relative;
   width: 280px;
   height: 280px;
   margin: 0;
-  // overflow: hidden;
-
   background-size: cover;
   background-position: center;
-
-  // &.blur-load {
-  //   background-size: cover;
-  //   background-position: center;
-  //   // cursor: pointer;
-  // }
 
   &:hover::after,
   &:focus::after,
@@ -61,7 +61,6 @@
     bottom: 200px;
     color: white;
     opacity: 0;
-    // pointer-events: none;
     transition: opacity 0.3s ease;
 
     .image-title {
@@ -123,7 +122,7 @@
   justify-content: center;
   align-items: center;
   height: 50vh;
-  grid-column: 1 / -1; // This makes the div span all columns
+  grid-column: 1 / -1;
   text-align: center;
 }
 
@@ -139,15 +138,6 @@
   padding: 20px 0;
 }
 
-.images-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
-  padding: 20px;
-  place-items: center;
-}
-
-// Update your media query
 @media (min-width: 768px) {
   .images-grid {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -159,7 +149,6 @@
   }
 }
 
-// Add another breakpoint for larger screens if needed
 @media (min-width: 1200px) {
   .images-grid {
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));

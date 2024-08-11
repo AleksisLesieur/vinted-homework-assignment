@@ -5,35 +5,33 @@
   width: 100%;
   max-width: 1200px;
   margin: 50px auto;
-  // padding: 20px;
-}
-
-.favoriteIcon {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  cursor: pointer;
-  z-index: 10;
-}
-
-.videoContainer {
-  width: 100%;
-  padding: 0 20px;
-  margin: 80px 0;
-}
-
-.videoWrapper {
-  position: relative;
-  padding-top: 56.25%; // 16:9 Aspect Ratio
-}
-
-.video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  .videoContainer {
+    position: relative;
+    width: 100%;
+    padding: 0 20px;
+    margin: 80px 0;
+    .video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .favoriteIcon {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      cursor: pointer;
+      z-index: 10;
+      img.responsive-svg {
+        width: 100%;
+        height: auto;
+        max-width: 72px;
+        max-height: 72px;
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {
@@ -54,82 +52,10 @@
   }
 }
 
-.favoriteIcon img.responsive-svg {
-  width: 100%; /* Make the image fill its container */
-  height: auto; /* Maintain aspect ratio */
-  max-width: 72px; /* Maximum width of the original SVG */
-  max-height: 72px; /* Maximum height of the original SVG */
-}
-
-/* Media query for smaller devices */
-@media (max-width: 768px) {
-  .favoriteIcon {
-    max-width: 54px; /* 75% of original size for medium devices */
-  }
-}
-
 @media (max-width: 480px) {
   .favoriteIcon {
-    max-width: 36px; /* 50% of original size for small devices */
+    max-width: 36px;
   }
-}
-
-// some claude stuff
-
-// .videosContainer {
-//   display: grid;
-//   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-//   gap: 1rem;
-//   padding: 1rem;
-// }
-
-// .videoContainer {
-//   position: relative;
-//   aspect-ratio: 16 / 9;
-//   overflow: hidden;
-//   border-radius: 8px;
-//   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-// }
-
-// .videoDescription {
-//   position: absolute;
-//   bottom: 0;
-//   left: 0;
-//   right: 0;
-//   background-color: rgba(0, 0, 0, 0.7);
-//   color: white;
-//   padding: 0.5rem;
-// }
-
-// .videoTitle {
-//   font-weight: bold;
-// }
-
-// .videoDuration {
-//   font-size: 0.8rem;
-// }
-
-// .favourite {
-//   position: absolute;
-//   top: 0.5rem;
-//   right: 0.5rem;
-//   background-color: rgba(255, 255, 255, 0.8);
-//   padding: 0.3rem 0.6rem;
-//   border-radius: 4px;
-//   cursor: pointer;
-//   font-size: 0.8rem;
-// }
-
-// .edgecase {
-//   grid-column: 1 / -1;
-//   text-align: center;
-//   padding: 2rem;
-//   font-size: 1.2rem;
-//   color: #666;
-// }
-
-.videoContainer {
-  position: relative;
 }
 
 .edgecase {
