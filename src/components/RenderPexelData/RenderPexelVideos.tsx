@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import styles from "./RenderPexelVideos.module.scss";
 import { FavouritesContext } from "../FavouritesContextProvider";
 import Loading from "./../../assets/Loading.svg";
+import StarIconFull from "./../../assets/StarIconFull.svg";
+import StarIconEmpty from "./../../assets/StarIconEmpty.svg";
 
 interface PexelsVideoSearchResponse {
   next_page: string;
@@ -98,8 +100,15 @@ export default function RenderPexelVideos(): JSX.Element {
   const observer = useRef<IntersectionObserver | null>(null);
   const lastVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  const { media, search, quality, showingFavourite } =
-    useContext(FavouritesContext);
+  const {
+    media,
+    search,
+    quality,
+    showingFavourite,
+    favouriteVideos,
+    toggleFavourites,
+    handleSaveFavouriteVideos,
+  } = useContext(FavouritesContext);
 
   useEffect(() => {
     setVideos([]);
@@ -188,10 +197,20 @@ export default function RenderPexelVideos(): JSX.Element {
     [loading, hasMore, videos, showingFavourite, showVideos, quality]
   );
 
+  const isVideoFavourited = (video: Video) => {
+    return favouriteVideos.some((fav) => fav.id === video.id);
+  };
+
+  const toggleFavorite = (video: Video) => {
+    handleSaveFavouriteVideos(video);
+  };
+
+  const videosToRender = showingFavourite ? favouriteVideos : videos;
+
   return (
     <div className={styles.videosContainer}>
-      {videos.map((video, index) => (
-        <div key={index} className={styles.videoContainer}>
+      {videosToRender.map((video, index) => (
+        <div key={video.id} className={styles.videoContainer}>
           <video
             ref={index === videos.length - 1 ? lastVideoRef : null}
             controls
@@ -204,11 +223,22 @@ export default function RenderPexelVideos(): JSX.Element {
             />
             Your browser does not support the video tag.
           </video>
+          <div
+            className={styles.favoriteIcon}
+            onClick={() => toggleFavorite(video)}
+          >
+            <img
+              src={isVideoFavourited(video) ? StarIconFull : StarIconEmpty}
+              alt={isVideoFavourited(video) ? "Favorited" : "Not Favorited"}
+            />
+          </div>
         </div>
       ))}
-      {/* {loading && (
+      <div>{`${media} favourites`}</div>
+
+      {loading && (
         <img src={Loading} alt="Loading" className={styles.loading} />
-      )} */}
+      )}
     </div>
   );
 }

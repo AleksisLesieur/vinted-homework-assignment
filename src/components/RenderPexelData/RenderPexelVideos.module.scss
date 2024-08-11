@@ -91,3 +91,15 @@
 //   font-size: 1.2rem;
 //   color: #666;
 // }
+
+.videoContainer {
+  position: relative;
+}
+
+.favoriteIcon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  z-index: 10;
+}
