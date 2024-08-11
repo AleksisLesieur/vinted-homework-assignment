@@ -4,15 +4,14 @@ import { FavouritesContext } from "./FavouritesContextProvider";
 import { useContext } from "react";
 
 export default function RenderPexelMedia() {
-  const { media } = useContext(FavouritesContext);
+  const { media, quality } = useContext(FavouritesContext);
 
   switch (media) {
     case "Images":
       return <RenderPexelImages />;
     case "Videos":
-      return <RenderPexelVideos />;
+      return <RenderPexelVideos key={quality} />;
     default:
       return <div>Please select a media type</div>;
   }
-  //   return media === "Images" ? <RenderPexelImages /> : <RenderPexelVideos />;
 }

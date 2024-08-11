@@ -52,7 +52,7 @@ interface VideoPicture {
   picture: string;
 }
 
-const Default = "1080p";
+const Default = "240p";
 
 const QualitySettings: { [key: string]: number } = {
   "240p": 240,
@@ -111,12 +111,6 @@ export default function RenderPexelVideos(): JSX.Element {
   } = useContext(FavouritesContext);
 
   useEffect(() => {
-    setVideos([]);
-    setPage(1);
-    setHasMore(true);
-  }, [search, quality]);
-
-  useEffect(() => {
     console.log("--------------------");
     console.log(page, " page");
     console.log(videos, " videos");
@@ -127,6 +121,7 @@ export default function RenderPexelVideos(): JSX.Element {
     console.log(controller, " controller");
     console.log(observer, " observer");
     console.log(lastVideoRef, " lastVideoref");
+    console.log(search, " search");
     console.log("--------------------");
   }, [loading, hasMore, videos, showingFavourite, showVideos, quality]);
 
@@ -197,6 +192,12 @@ export default function RenderPexelVideos(): JSX.Element {
     [loading, hasMore, videos, showingFavourite, showVideos, quality]
   );
 
+  useEffect(() => {
+    setVideos([]);
+    setPage(1);
+    setHasMore(true);
+  }, [search, quality]);
+
   const isVideoFavourited = (video: Video) => {
     return favouriteVideos.some((fav) => fav.id === video.id);
   };
@@ -209,7 +210,7 @@ export default function RenderPexelVideos(): JSX.Element {
 
   return (
     <div className={styles.videosContainer}>
-      {videosToRender.map((video, index) => (
+      {videosToRender?.map((video, index) => (
         <div key={video.id} className={styles.videoContainer}>
           <video
             ref={index === videos.length - 1 ? lastVideoRef : null}
@@ -228,16 +229,37 @@ export default function RenderPexelVideos(): JSX.Element {
             onClick={() => toggleFavorite(video)}
           >
             <img
+              className={styles["responsive-svg"]}
               src={isVideoFavourited(video) ? StarIconFull : StarIconEmpty}
               alt={isVideoFavourited(video) ? "Favorited" : "Not Favorited"}
             />
           </div>
         </div>
       ))}
-      <div>{`${media} favourites`}</div>
-      {/* <div>testing</div> */}
       {loading && (
         <img src={Loading} alt="Loading" className={styles.loading} />
+      )}
+
+      {loading && hasMore && (
+        <div className={styles.edgecase}>
+          <img src={Loading} alt="Loading more..." />
+        </div>
+      )}
+
+      {!search && !showingFavourite && (
+        <div className={styles.edgecase}>
+          Search for any videos you would like to see!
+        </div>
+      )}
+
+      {!hasMore && !!videos?.length && !showingFavourite && (
+        <div className={styles.edgecase}>
+          That's all folks! No more videos for "{search}"
+        </div>
+      )}
+
+      {!hasMore && !videos?.length && !showingFavourite && !!search.length && (
+        <div className={styles.edgecase}>No videos found for "{search}"</div>
       )}
     </div>
   );
