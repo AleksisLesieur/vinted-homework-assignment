@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import styles from "./RenderPexelVideos.module.scss";
 import { FavouritesContext } from "../FavouritesContextProvider";
 import Loading from "./../../assets/Loading.svg";
