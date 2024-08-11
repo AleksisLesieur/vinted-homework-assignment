@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Notification from "./Notification";
 import styles from "./Notification.module.scss";
 
@@ -10,6 +10,8 @@ export interface NotificationItem {
 
 const NotificationManager: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const topRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleNotification = (event: CustomEvent<NotificationItem>) => {
@@ -21,8 +23,20 @@ const NotificationManager: React.FC = () => {
 
     window.addEventListener("addNotification" as any, handleNotification);
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsAtTop(entry.isIntersecting);
+      },
+      { threshold: [1] }
+    );
+
+    if (topRef.current) {
+      observer.observe(topRef.current);
+    }
+
     return () => {
       window.removeEventListener("addNotification" as any, handleNotification);
+      observer.disconnect();
     };
   }, []);
 
@@ -33,18 +47,28 @@ const NotificationManager: React.FC = () => {
   };
 
   return (
-    <div className={styles.notificationManager}>
-      {notifications.map((notification, index) => (
-        <Notification
-          key={notification.id}
-          message={notification.message}
-          type={notification.type}
-          duration={1250}
-          onClose={() => removeNotification(notification.id)}
-          style={{ top: `${index * 5}px` }}
-        />
-      ))}
-    </div>
+    <>
+      <div
+        ref={topRef}
+        style={{ position: "absolute", top: 0, height: "1px" }}
+      />
+      <div
+        className={`${styles.notificationManager} ${
+          isAtTop ? styles.atTop : ""
+        }`}
+      >
+        {notifications.map((notification, index) => (
+          <Notification
+            key={notification.id}
+            message={notification.message}
+            type={notification.type}
+            duration={1250}
+            onClose={() => removeNotification(notification.id)}
+            style={{ top: `${index * 16}px` }}
+          />
+        ))}
+      </div>
+    </>
   );
 };
 

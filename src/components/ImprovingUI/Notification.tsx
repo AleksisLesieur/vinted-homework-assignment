@@ -26,7 +26,7 @@ const Notification: React.FC<NotificationProps> = ({
         if (prevProgress <= 0) {
           clearInterval(timer);
           setIsVisible(false);
-          setTimeout(onClose, 300); // Wait for exit animation before removing
+          setTimeout(onClose, 300);
           return 0;
         }
         return prevProgress - 100 / (duration / 100);
