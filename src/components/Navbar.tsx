@@ -18,6 +18,7 @@ export default function Navbar(): JSX.Element {
   const {
     toggleFavourites,
     favouriteImages,
+    favouriteVideos,
     showingFavourite,
     media,
     // setShowingFavourites,
@@ -128,9 +129,14 @@ export default function Navbar(): JSX.Element {
           >
             {showingFavourite ? "Go back" : "Favourites"}
           </div>
-          {!!favouriteImages?.length && (
+          {!!favouriteImages?.length && media === "Images" && (
             <span className={styles.favouriteCount}>
               {favouriteImages.length}
+            </span>
+          )}
+          {!!favouriteVideos?.length && media === "Videos" && (
+            <span className={styles.favouriteCount}>
+              {favouriteVideos.length}
             </span>
           )}
         </div>

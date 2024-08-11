@@ -235,7 +235,7 @@ export default function RenderPexelVideos(): JSX.Element {
         </div>
       ))}
       <div>{`${media} favourites`}</div>
-      <div>testing</div>
+      {/* <div>testing</div> */}
       {loading && (
         <img src={Loading} alt="Loading" className={styles.loading} />
       )}
