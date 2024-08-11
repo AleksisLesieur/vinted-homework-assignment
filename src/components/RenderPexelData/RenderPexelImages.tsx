@@ -85,8 +85,6 @@ export default function RenderPexelImages(): JSX.Element {
         try {
           controller.current.abort("Abort");
 
-          console.log(images);
-
           const url =
             media === "Images"
               ? `https://api.pexels.com/v1/search?query=${search}&per_page=5&page=${page}`
