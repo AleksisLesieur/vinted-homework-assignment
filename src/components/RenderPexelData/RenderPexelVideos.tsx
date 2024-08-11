@@ -71,6 +71,7 @@ function filterVideosByClosestQuality(
 ): Video[] {
   const targetHeight =
     QualitySettings[desiredQuality] || QualitySettings[Default];
+  if (!videos) return [];
 
   return videos.map((video) => {
     const closestFile = video.video_files.reduce((closest, current) => {
