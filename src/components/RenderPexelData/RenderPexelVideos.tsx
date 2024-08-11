@@ -4,6 +4,7 @@ import { FavouritesContext } from "../FavouritesContextProvider";
 import Loading from "./../../assets/Loading.svg";
 import StarIconFull from "./../../assets/StarIconFull.svg";
 import StarIconEmpty from "./../../assets/StarIconEmpty.svg";
+import { NotificationItem } from "../ImprovingUI/NotificationManager";
 
 interface PexelsVideoSearchResponse {
   next_page: string;
@@ -202,10 +203,24 @@ export default function RenderPexelVideos(): JSX.Element {
     return favouriteVideos.some((fav) => fav.id === video.id);
   };
 
-  const toggleFavorite = (video: Video) => {
-    handleSaveFavouriteVideos(video);
+  const addNotification = (notification: Omit<NotificationItem, "id">) => {
+    const event = new CustomEvent("addNotification", {
+      detail: { ...notification, id: Date.now() },
+    });
+    window.dispatchEvent(event);
   };
 
+  const toggleFavorite = (video: Video) => {
+    handleSaveFavouriteVideos(video);
+    if (isVideoFavourited(video)) {
+      addNotification({
+        message: "Video removed from favorites",
+        type: "error",
+      });
+    } else {
+      addNotification({ message: "Video added to favorites", type: "success" });
+    }
+  };
   const videosToRender = showingFavourite ? favouriteVideos : videos;
 
   return (

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useContext } from "react";
 import styles from "./RenderPexelImages.module.scss";
 import Loading from "./../../assets/Loading.svg";
 import { FavouritesContext } from "../FavouritesContextProvider";
+import { NotificationItem } from "../ImprovingUI/NotificationManager";
 
 export interface Photo {
   id: number;
@@ -173,6 +174,25 @@ export default function RenderPexelImages(): JSX.Element {
     setLoadedImages(new Set());
   }, [quality]);
 
+  const addNotification = (notification: Omit<NotificationItem, "id">) => {
+    const event = new CustomEvent("addNotification", {
+      detail: { ...notification, id: Date.now() },
+    });
+    window.dispatchEvent(event);
+  };
+
+  const handleSaveFavourite = (element: Photo) => {
+    handleSaveFavouriteImages?.(element);
+    const isFavourite = favouriteImages?.some((fav) => fav.id === element.id);
+    if (isFavourite) {
+      addNotification({
+        message: "Image removed from favorites",
+        type: "error",
+      });
+    } else {
+      addNotification({ message: "Image added to favorites", type: "success" });
+    }
+  };
   const imagesToRender = showingFavourite ? favouriteImages : images;
 
   return (
@@ -221,7 +241,7 @@ export default function RenderPexelImages(): JSX.Element {
               </div>
               <div
                 className={styles.favourite}
-                onClick={() => handleSaveFavouriteImages?.(element)}
+                onClick={() => handleSaveFavourite(element)}
               >
                 {isFavourite ? "Remove" : "Favourite"}
               </div>

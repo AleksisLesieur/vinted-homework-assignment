@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { FavouritesContext } from "./FavouritesContextProvider";
+import { FavouritesContext } from "./../FavouritesContextProvider";
 import "./Modal.scss";
 
 interface ModalProps {

@@ -1,0 +1,55 @@
+.notification {
+  position: relative;
+  right: -400px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: white;
+  width: 300px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: right 0.3s ease-out, opacity 0.3s ease-out;
+  opacity: 0;
+
+  &.success {
+    background-color: #4caf50;
+  }
+
+  &.error {
+    background-color: #f44336;
+  }
+
+  &.show {
+    right: 0;
+    opacity: 1;
+  }
+
+  .notificationContent {
+    margin-bottom: 10px;
+  }
+
+  .progressBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.7);
+    transition: width 0.1s linear;
+  }
+}
+
+.notificationManager {
+  position: fixed;
+  top: 125px;
+  right: 10px;
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .notificationManager {
+    position: fixed;
+    top: 160px;
+    right: 20px;
+    z-index: 1000;
+  }
+}
